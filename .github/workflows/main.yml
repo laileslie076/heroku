@@ -1,0 +1,39 @@
+
+
+   ```yaml
+   name: Deploy to Heroku
+
+   on:
+     push:
+       branches:
+         - main  # 或者你使用的分支
+
+   jobs:
+     deploy:
+       runs-on: ubuntu-latest
+
+       steps:
+         - name: Checkout code
+           uses: actions/checkout@v2
+
+         - name: Set up Node.js
+           uses: actions/setup-node@v2
+           with:
+             node-version: '14'
+
+         - name: Install Heroku CLI
+           run: |
+             npm install -g heroku
+
+         - name: Login to Heroku
+           run: echo "$HEROKU_API_KEY" | heroku container:login
+
+         - name: Deploy to Heroku
+           run: |
+             heroku git:remote -a your-app-name
+             git push heroku main
+           env:
+             HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+   ```
+
+
